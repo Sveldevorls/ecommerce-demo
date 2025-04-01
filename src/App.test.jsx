@@ -1,11 +1,15 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from "@testing-library/react";
-import App from './App';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import routes from './router';
 
 describe("App module", () => {
     it("Successfully renders", () => {
-        render(<App />);
-        
-        expect(screen.getByText(/Hello world/)).toBeInTheDocument();
+        const router = createMemoryRouter(routes, {
+            initialEntries: ['/']
+        });
+        render(<RouterProvider router={router} />);
+
+        expect(screen.getByText(/Sample shop/)).toBeInTheDocument();
     })
 })
