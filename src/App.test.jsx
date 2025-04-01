@@ -1,13 +1,11 @@
 import { describe, it, expect } from 'vitest'
-import { getByText, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import App from './App';
 
 describe("App module", () => {
-    render(<App />);
-
     it("Successfully renders", () => {
-        const title = screen.getByText(/Hello world/);
+        render(<App />);
         
-        expect(title).toBeInTheDocument();
+        expect(screen.getByText(/Hello world/)).toBeInTheDocument();
     })
 })
