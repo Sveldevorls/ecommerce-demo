@@ -1,29 +1,42 @@
-import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from "@testing-library/react";
+import { describe, it, expect } from 'vitest'
+import { render, screen, waitFor } from "@testing-library/react";
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import ProductPage from './ProductPage';
 
-vi.mock("react-router-dom", () => ({
-    useLoaderData: vi.fn(),
-}));
+const routes = [{
+    path: "/products/:productID",
+    element: <ProductPage />,
+    loader: ({ params }) =>
+        params.productID == 0 ?
+            { title: "Sample item", id: 0 } :
+            null
+}];
+
 
 describe("ProductPage module", () => {
-    import("react-router-dom").then((router) => {
-        router.useLoaderData
-        .mockReturnValueOnce({ title: "Sample item" })
-        .mockReturnValueOnce(null);
-    });
+    it("Displays fetched data", async () => {
+        const router = createMemoryRouter(
+            routes,
+            { initialEntries: ["/products/0"] }
+        );
+        render(<RouterProvider router={router} />);
 
-    it("Displays fetched data", () => {
-        render(<ProductPage />);
-        screen.debug();
-
-        expect(screen.getByText("Sample item")).toBeInTheDocument();
+        await waitFor(() => {
+            screen.debug();
+            expect(screen.getByText("Sample item")).toBeInTheDocument();
+        });
     })
 
-    it("Shows error page when data is wrong", () => {
-        render(<ProductPage />);
-        screen.debug();
+    it("Shows error page when data is wrong", async () => {
+        const router = createMemoryRouter(
+            routes,
+            { initialEntries: ["/products/999"] }
+        );
+        render(<RouterProvider router={router} />);
 
-        expect(screen.getByText(/Error/)).toBeInTheDocument();
+        await waitFor(() => {
+            screen.debug();
+            expect(screen.getByText(/Error/)).toBeInTheDocument();
+        });
     })
 })
