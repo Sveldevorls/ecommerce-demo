@@ -6,9 +6,13 @@ export default function Products() {
     return (
         <>
             <h1>Our Products</h1>
-            <div>
-                {products.map(item => <h2><Link to={`./${item.id}`}>{item.title}</Link></h2>)}
-            </div>
+            {products.map(item =>
+                <div key={item.id}>
+                    <h2>
+                        <Link to={`./${item.id}`}>{item.title}</Link>
+                    </h2>
+                </div>
+            )}
         </>
     )
 }

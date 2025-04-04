@@ -2,6 +2,7 @@ import App from "./App";
 import Home from "./components/Home/Home";
 import Products from "./components/Products/Products";
 import ProductPage from "./components/ProductPage/ProductPage";
+import Cart from "./components/Cart/Cart";
 
 const routes = [
     {
@@ -13,7 +14,7 @@ const routes = [
                 element: <Home />
             },
             {
-                path: "/products/",
+                path: "/products",
                 loader: async () => {
                     let products = await fetch("https://fakestoreapi.com/products");
                     let result = await products.json();
@@ -33,7 +34,11 @@ const routes = [
                     }
                 },
                 element: <ProductPage />
-            }
+            },
+            {
+                path: "/cart",
+                element: <Cart />
+            },
         ]
     },
 ];
