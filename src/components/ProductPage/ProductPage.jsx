@@ -1,25 +1,44 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useLoaderData, useOutletContext } from "react-router-dom"
+import QuantitySelector from "../QuantitySelector/QuantitySelector";
 
 export default function ProductPage() {
     const product = useLoaderData();
     const { cart, setCart } = useOutletContext();
     const [message, setMessage] = useState("")
+    const quantityRef = useRef(null);
+
+    // Product doesnt exist (bad ID)
+    if (!product) return <h2>Error: product not found</h2>
+
+
+    const productStockCount = product.rating.count;
 
     function handleAddToCartClick(item) {
-        const nextCart = cart.slice();
-        const prevItem = nextCart.find(e => e.id == item.id);
+        /* if (productStockCount == 0) {
+            setMessage("Stock is empty now");
+            return
+        } */
 
-        if (prevItem) {
-            prevItem.quantity++;
+        const nextCart = cart.slice();
+        console.log(nextCart)
+        const cartItemEntry = nextCart.find(entry => entry.product.id == item.id);
+
+        // item already in cart 
+        if (cartItemEntry) {
+            if (cartItemEntry.quantity + parseInt(quantityRef.current.value, 10) > productStockCount) {
+                setMessage("Can't add more to cart");
+                return
+            }
+            cartItemEntry.quantity += parseInt(quantityRef.current.value, 10);
             setCart(nextCart);
         }
+
+        // item not yet in cart
         else {
-            const itemDetails = Object.fromEntries(Object.entries(item).filter(([k]) => k != "id"));
             const entry = {
-                id: item.id,
-                details: itemDetails,
-                quantity: 1
+                product: item,
+                quantity: parseInt(quantityRef.current.value, 10),
             }
             setCart([...cart, entry]);
         }
@@ -27,11 +46,15 @@ export default function ProductPage() {
         setMessage("Added to cart");
     }
 
-    if (!product) return <h2>Error: product not found</h2>
-
     return (
         <>
             <h2>{product && product.title}</h2>
+            <QuantitySelector
+                initQuantity={1}
+                maximum={productStockCount}
+                ref={quantityRef}
+            />
+            <h2>{productStockCount} items left in stock</h2>
             <button onClick={() => handleAddToCartClick(product)}>Add to cart</button>
             <h2>{message}</h2>
         </>
