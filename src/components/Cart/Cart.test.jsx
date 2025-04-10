@@ -1,12 +1,14 @@
 import { describe, it, expect } from 'vitest'
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { createMemoryRouter, RouterProvider, Outlet } from 'react-router-dom';
 import Cart from './Cart';
 import AppMock from './AppMock';
 import userEvent from '@testing-library/user-event';
 
+import { testCart } from '../../test-data';
 
-describe("ProductPage module", () => {
+
+describe("Cart page", () => {
     it("Displays error message when cart is empty", async () => {
         const context = {
             cart: [],
@@ -31,25 +33,12 @@ describe("ProductPage module", () => {
 
         render(<RouterProvider router={router} />);
 
-        await waitFor(() => {
-            expect(screen.getByText("Cart is empty")).toBeInTheDocument();
-        });
+        expect(await screen.findByText("Cart is empty")).toBeInTheDocument();
     })
 
-    it("Displays correct item count", async () => {
-        const cartTestData = [
-            {
-                product: {
-                    id: 1,
-                    title: "Sample item",
-                    rating: { count: 100 }
-                },
-                quantity: 100,
-            }
-        ]
-
+    it.each(testCart)("Displays correct item count", async (cartEntry) => {
         const context = {
-            cart: cartTestData,
+            cart: testCart,
             setCart: () => [],
         }
 
@@ -71,27 +60,13 @@ describe("ProductPage module", () => {
 
         const { container } = render(<RouterProvider router={router} />);
 
-        await waitFor(() => {
-            const itemDiv = container.querySelector(`[data-id='${cartTestData[0].product.id}']`)
-            expect(within(itemDiv).getByRole("textbox").value).toEqual(cartTestData[0].quantity.toString());
-        });
+        const itemDiv = container.querySelector(`[data-id='${cartEntry.product.id}']`)
+        expect(within(itemDiv).getByRole("textbox").value).toEqual(cartEntry.quantity.toString());
     })
 
-    it("Displays correct item pricing", async () => {
-        const cartTestData = [
-            {
-                product: {
-                    id: 1,
-                    title: "Sample item",
-                    price: 29.95,
-                    rating: { count: 100 }
-                },
-                quantity: 65,
-            }
-        ]
-
+    it.each(testCart)("Displays correct item pricing", async (cartEntry) => {
         const context = {
-            cart: cartTestData,
+            cart: testCart,
             setCart: () => [],
         }
 
@@ -112,32 +87,18 @@ describe("ProductPage module", () => {
         );
 
         const { container } = render(<RouterProvider router={router} />);
-        const productTotalPrice = cartTestData[0].product.price * cartTestData[0].quantity;
 
-        await waitFor(() => {
-            const itemDiv = container.querySelector(`[data-id='${cartTestData[0].product.id}']`)
-            expect(within(itemDiv).getByText(productTotalPrice.toLocaleString())).toBeInTheDocument()
-        });
+        const productTotalPrice = cartEntry.product.price * cartEntry.quantity;
+        const itemDiv = container.querySelector(`[data-id='${cartEntry.product.id}']`)
+        expect(within(itemDiv).getByText(productTotalPrice.toLocaleString())).toBeInTheDocument()
     })
 })
 
 describe("Cart page quantity selector", () => {
-    it("Updates cart to show correct item count and price", async () => {
-        const cartTestData = [
-            {
-                product: {
-                    id: 1,
-                    title: "Sample item",
-                    price: 29.95,
-                    rating: { count: 100 }
-                },
-                quantity: 60,
-            }
-        ]
-
+    it.each(testCart)("Updates cart to show correct item count and price", async (cartEntry) => {
         const routes = [{
             path: "/",
-            element: <AppMock initCart={cartTestData} />,
+            element: <AppMock initCart={testCart} />,
             children: [
                 {
                     path: "/cart",
@@ -151,42 +112,32 @@ describe("Cart page quantity selector", () => {
             { initialEntries: ["/cart"] }
         );
 
-        const expectPriceFromQuantity = (quantity) => (cartTestData[0].product.price * quantity);
-        const initialQuantity = cartTestData[0].quantity;
+        const expectPriceFromQuantity = (quantity) => (cartEntry.product.price * quantity);
+        const user = userEvent.setup();
+        const initialQuantity = cartEntry.quantity;
 
         const { container } = render(<RouterProvider router={router} />);
-        const user = userEvent.setup();
-
-        const itemDiv = container.querySelector(`[data-id='${cartTestData[0].product.id}']`)
+        
+        const itemDiv = container.querySelector(`[data-id='${cartEntry.product.id}']`)
         const quantityInput = within(itemDiv).getByRole("textbox");
         const increaseButton = within(itemDiv).getByRole("button", { name: "+" });
         const decreaseButton = within(itemDiv).getByRole("button", { name: "-" });
 
         await user.click(increaseButton);
-        await waitFor(async () => {
-            expect(within(itemDiv).getByText(expectPriceFromQuantity(initialQuantity + 1).toLocaleString())).toBeInTheDocument()
-        });
+        expect(within(itemDiv).getByText(expectPriceFromQuantity(initialQuantity + 1).toLocaleString())).toBeInTheDocument()
 
         await user.click(increaseButton);
-        await waitFor(async () => {
-            expect(within(itemDiv).getByText(expectPriceFromQuantity(initialQuantity + 2).toLocaleString())).toBeInTheDocument()
-        });
+        expect(within(itemDiv).getByText(expectPriceFromQuantity(initialQuantity + 2).toLocaleString())).toBeInTheDocument()
 
         await user.click(decreaseButton);
         await user.click(decreaseButton);
         await user.click(decreaseButton);
-        await waitFor(async () => {
-            expect(within(itemDiv).getByText(expectPriceFromQuantity(initialQuantity - 1).toLocaleString())).toBeInTheDocument()
-        });
+        expect(within(itemDiv).getByText(expectPriceFromQuantity(initialQuantity - 1).toLocaleString())).toBeInTheDocument()
 
         await user.type(quantityInput, "{backspace}{backspace}37")
-        await waitFor(async () => {
-            expect(within(itemDiv).getByText(expectPriceFromQuantity(37).toLocaleString())).toBeInTheDocument()
-        });
+        expect(within(itemDiv).getByText(expectPriceFromQuantity(37).toLocaleString())).toBeInTheDocument()
 
         await user.type(quantityInput, "11111")
-        await waitFor(async () => {
-            expect(within(itemDiv).getByText(expectPriceFromQuantity(100).toLocaleString())).toBeInTheDocument()
-        });
+        expect(within(itemDiv).getByText(expectPriceFromQuantity(100).toLocaleString())).toBeInTheDocument()
     })
 })

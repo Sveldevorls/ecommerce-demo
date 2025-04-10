@@ -1,13 +1,16 @@
 import { describe, it, expect } from 'vitest'
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { createMemoryRouter, RouterProvider, Outlet } from 'react-router-dom';
-import ProductPage from './ProductPage';
 import userEvent from '@testing-library/user-event';
-import App from '../../App'
+
+// test data
+import ProductPage from './ProductPage';
+import App from '../../App';
+import { testProduct } from '../../test-data';
+
 
 const cartAddSuccessMessage = "Added to cart";
 const cartAddFailMessage = "Can't add more to cart";
-const productData = { id: 0, title: "Sample item", rating: { count: 100 } }
 
 describe("ProductPage module", () => {
     const routes = [{
@@ -21,8 +24,8 @@ describe("ProductPage module", () => {
                 path: "/products/:productID",
                 element: <ProductPage />,
                 loader: ({ params }) =>
-                    params.productID == 0 ?
-                        productData :
+                    params.productID == 1 ?
+                        testProduct :
                         null
             }
         ]
@@ -35,44 +38,30 @@ describe("ProductPage module", () => {
             { initialEntries: ["/products/999"] }
         );
         render(<RouterProvider router={router} />);
-
-        await waitFor(() => {
-            screen.getByText(/Error/)
-        });
         
-        expect(screen.getByText(/Error/)).toBeInTheDocument();
+        expect(await screen.findByText(/Error/)).toBeInTheDocument();
     })
 
     // Success case
     it("Displays fetched data", async () => {
         const router = createMemoryRouter(
             routes,
-            { initialEntries: ["/products/0"] }
+            { initialEntries: ["/products/1"] }
         );
-        render(
-            <RouterProvider router={router} />
-        );
+        render(<RouterProvider router={router} />);
 
-        await waitFor(() => {
-            screen.getByText(productData.title)
-        });
-
-        expect(screen.getByText(productData.title)).toBeInTheDocument();
+        expect(await screen.findByText(testProduct.title)).toBeInTheDocument();
     })
 
     it("Shows correct remaining item count", async () => {
         const router = createMemoryRouter(
             routes,
-            { initialEntries: ["/products/0"] }
+            { initialEntries: ["/products/1"] }
         );
 
         render(<RouterProvider router={router} />);
 
-        await waitFor(async () => {
-            screen.getByText(`${productData.rating.count} items left in stock`)
-        });
-        
-        expect(screen.getByText(`${productData.rating.count} items left in stock`)).toBeInTheDocument();
+        expect(await screen.findByText(`${testProduct.rating.count} items left in stock`)).toBeInTheDocument();
     })
 })
 
@@ -85,8 +74,8 @@ describe("Product page cart adding function", () => {
                 path: "/products/:productID",
                 element: <ProductPage />,
                 loader: ({ params }) =>
-                    params.productID == 0 ?
-                        productData :
+                    params.productID == 1 ?
+                        testProduct :
                         null
             }
         ]
@@ -95,53 +84,40 @@ describe("Product page cart adding function", () => {
     it("Calls cart adder function when button is clicked", async () => {
         const router = createMemoryRouter(
             routes,
-            { initialEntries: ["/products/0"] }
+            { initialEntries: ["/products/1"] }
         );
         const user = userEvent.setup();
 
         render(<RouterProvider router={router} />);
+        const button = await screen.findByRole("button", { name: "Add to cart" });
 
-        await waitFor(async () => {
-            const button = screen.getByRole("button", { name: "Add to cart" });
-            await user.click(button);
-        });
-        
+        await user.click(button);
         expect(screen.getByText(cartAddSuccessMessage)).toBeInTheDocument();
     })
 
     it("Stops item being added if the result quantity is larger than the current stock", async () => {
+        // maximum quantity = 100
+
         const router = createMemoryRouter(
             routes,
-            { initialEntries: ["/products/0"] }
+            { initialEntries: ["/products/1"] }
         );
-        render(<RouterProvider router={router} />);
         const user = userEvent.setup();
 
-        let button;
-        let quantityInput;
+        render(<RouterProvider router={router} />);
+        const button = await screen.findByRole("button", { name: "Add to cart" });
+        const quantityInput = await screen.findByRole("textbox");
 
-        await waitFor(async () => {
-            button = screen.getByRole("button", { name: "Add to cart" });
-            quantityInput = screen.getByRole("textbox");
-            await user.type(quantityInput, "{backspace}50");
-            expect(quantityInput.value).toEqual("50");
-        })
-        
-        await waitFor(async () => {
-            await user.click(button); // 50
-            expect(screen.queryByText(cartAddFailMessage)).not.toBeInTheDocument();
-        })
+        await user.type(quantityInput, "{backspace}50");
+        expect(quantityInput.value).toEqual("50");
 
-        await waitFor(async () => {
-            await user.click(button); // 100
-            expect(screen.queryByText(cartAddFailMessage)).not.toBeInTheDocument();
-        })
+        await user.click(button); // 50
+        expect(screen.queryByText(cartAddFailMessage)).not.toBeInTheDocument();
 
-        await waitFor(async () => {
-            await user.click(button); // 150 -> fail
-            expect(screen.queryByText(cartAddFailMessage)).toBeInTheDocument();
-        })
+        await user.click(button); // 100
+        expect(screen.queryByText(cartAddFailMessage)).not.toBeInTheDocument();
 
-        
+        await user.click(button); // 150 -> fail
+        expect(screen.getByText(cartAddFailMessage)).toBeInTheDocument();
     })
 })

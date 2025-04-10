@@ -21,7 +21,6 @@ export default function ProductPage() {
         } */
 
         const nextCart = cart.slice();
-        console.log(nextCart)
         const cartItemEntry = nextCart.find(entry => entry.product.id == item.id);
 
         // item already in cart 
