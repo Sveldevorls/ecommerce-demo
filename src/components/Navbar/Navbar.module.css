@@ -1,14 +1,54 @@
-.Navbar {
+:root {
+    --navbar-gap: 2em;
+    --navbar-horizontal-padding: 1em;
+    --navbar-vertical-padding: 1.5em;
+}
+
+.navbar {
+    height: 4em;
     display: flex;
+    align-items: center;
+    gap: var(--navbar-gap);
+
+    padding: 0 calc(2 * var(--navbar-horizontal-padding)) 0 var(--navbar-horizontal-padding);
+    box-shadow: 0 0 5px #d9d9d9;
 
     ul {
-        display: flex;
         list-style-type: none;
-        gap: 5%;
-        flex: 1;
+        display: flex;
+        gap: var(--navbar-gap);
     }
 
-    .cart {
-        margin-left: auto;
+    li:hover {
+        box-shadow: inset 0 -3px #191919;
     }
+
+    a {
+        padding: var(--navbar-vertical-padding) 0;
+        display: block;
+        height: 90%;
+    }
+}
+
+a.logo {
+    padding: 0;
+
+    img {
+        height: 100%;
+    }
+}
+
+.cart {
+    margin-left: auto;
+
+    a {
+        padding: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+    }
+}
+
+.icon {
+    height: 1.5em;
 }
