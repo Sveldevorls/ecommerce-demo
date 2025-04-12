@@ -11,13 +11,15 @@ const routes = [{
 }];
 
 describe("Products module", () => {
-    it.each(testProductArray.map(product => product.title))("Displays products", async (productTitle) => {
+    it.each(testProductArray)("Displays product details in cards", async (product) => {
         const router = createMemoryRouter(
             routes,
             { initialEntries: ["/products"]}
         );
         render(<RouterProvider router={router} />);
 
-        expect(await screen.findByText(productTitle)).toBeInTheDocument();
+        expect(await screen.findByText(product.title)).toBeInTheDocument();
+        expect(await screen.findByText(`$${product.price}`)).toBeInTheDocument();
+        expect(await screen.findByAltText(product.title)).toBeInTheDocument();
     })
 })
