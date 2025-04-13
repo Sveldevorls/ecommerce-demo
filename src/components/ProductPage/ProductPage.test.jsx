@@ -12,7 +12,7 @@ import { testProduct } from '../../test-data';
 const cartAddSuccessMessage = "Added to cart";
 const cartAddFailMessage = "Can't add more to cart";
 
-describe("ProductPage module", () => {
+describe("Product page display", () => {
     const routes = [{
         path: "/",
         element: <Outlet context={{
@@ -43,7 +43,7 @@ describe("ProductPage module", () => {
     })
 
     // Success case
-    it("Displays fetched data", async () => {
+    it("Shows item details", async () => {
         const router = createMemoryRouter(
             routes,
             { initialEntries: ["/products/1"] }
@@ -51,6 +51,11 @@ describe("ProductPage module", () => {
         render(<RouterProvider router={router} />);
 
         expect(await screen.findByText(testProduct.title)).toBeInTheDocument();
+        expect(await screen.findByText(testProduct.description)).toBeInTheDocument();
+        expect(await screen.findByText(testProduct.rating.rate)).toBeInTheDocument();
+        expect(await screen.findByText(`$${testProduct.price}`)).toBeInTheDocument();
+        expect(await screen.findByAltText(testProduct.title)).toBeInTheDocument();
+        
     })
 
     it("Shows correct remaining item count", async () => {

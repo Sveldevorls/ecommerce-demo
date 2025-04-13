@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react"
+import styles from "./QuantitySelector.module.css"
+import plus from "../../assets/plus.svg"
+import minus from "../../assets/minus.svg"
 
 export default function QuantitySelector({ initQuantity = 1, maximum = Infinity, callback, ref }) {
     const [quantity, setQuantity] = useState(initQuantity);
@@ -22,12 +25,12 @@ export default function QuantitySelector({ initQuantity = 1, maximum = Infinity,
     }
 
     return (
-        <>
+        <div className={styles.quantitySelector}>
             <button
                 onClick={() => setQuantity(quantity => quantity - 1)}
                 disabled={quantity <= 1}
             >
-                -
+                <img src={minus} alt="-" />
             </button>
             <input
                 type="text"
@@ -42,8 +45,8 @@ export default function QuantitySelector({ initQuantity = 1, maximum = Infinity,
                 onClick={() => setQuantity(quantity => quantity + 1)}
                 disabled={quantity >= maximum}
             >
-                +
+                <img src={plus} alt="+" />
             </button>
-        </>
+        </div>
     )
 }

@@ -1,0 +1,24 @@
+.quantitySelector {
+    display: flex;
+    width: fit-content;
+
+    border-radius: 5px;
+    border: 1px solid black;
+
+    input {
+        width: 5em;
+        text-align: center;
+        border: none;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+    }
+
+    button {
+        padding: 0.6em;
+        aspect-ratio: 1/1;
+    }
+
+    img {
+        width: 18px;
+    }
+}
