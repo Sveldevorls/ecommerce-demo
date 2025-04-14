@@ -1,5 +1,34 @@
-.cartContainer {
+.cartBase {
+    padding: 1.5em 2em;
+}
+
+.title {
+    font-size: 2em;
+    margin-bottom: 0.5em;
+}
+
+/* Empty cart */
+
+.cartEmptyCard {
+    background-color: #f3f5f8;
+    width: fit-content;
     padding: 2em;
+    border-radius: 0.5em;
+    
+    span {
+        display: block;
+    }
+
+    button {
+        font-weight: 600;
+        border-radius: 0.5em;
+        background: #ffbc00;
+        padding: 1em;
+        margin-top: 1em;
+    }
+}
+
+.cartContainer {
     display: flex;
     flex-direction: column;
     gap: 2em;
@@ -10,14 +39,20 @@
     }
 }
 
-.cartItems {
+.cartProducts {
     gap: 1em;
 }
 
 .cartSummary {
-    padding: 1em;
-    border: 1px solid #000;
+    position: relative;
+    padding: 1.5em;
     background-color: #f3f5f8;
+    display: flex;
+    flex-direction: column;
+
+    h2 {
+        margin-bottom: 0.3lh;
+    }
 }
 
 .subtotal,
@@ -25,12 +60,35 @@
 .total {
     display: flex;
     justify-content: space-between;
+    font-weight: 600;
+    
+    p:last-child {
+        font-size: 1.1em;
+    }
+}
+
+.subtotal,
+.shipping {
+    margin-top: 0.1lh;
+}
+
+.delivery {
+    margin-top: 2lh;
+    margin-bottom: 2lh;
+}
+
+.total{
+    padding-top: 0.75em;
+    margin-top: auto;
+    border-top: 1px solid #bebebe;
 }
 
 .cartHeader {
     display: grid;
     grid-template-columns: 5fr 3fr;
     gap: 1em;
+    font-weight: 600;
+    color: #181818;
 
     >div {
         display: flex;
@@ -59,7 +117,7 @@
     +.cartEntry::before {
         content: "";
         width: 100%;
-        border-bottom: 1px solid black;
+        border-bottom: 1px solid #cfcfcf;
         position: absolute;
         top: 0;
     }
@@ -98,4 +156,45 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.checkout {
+    max-width: 30em;
+    font-size: 1em;
+    width: 100%;
+    padding: 1em 0;
+    background: #ffbc00;
+    border-radius: 0.25em;
+    font-weight: 500;
+    align-self: center;
+
+    transition: background 0.3s ease;
+
+    &:hover {
+        background: #fdcc46;
+    }
+}
+
+.delivery {
+    padding: 1em;
+    background-color: #bee3f8;
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    font-weight: 600;
+    border-radius: 0.5em;
+
+    >div {
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+    }
+
+    img {
+        height: 32px;
+    }
 }

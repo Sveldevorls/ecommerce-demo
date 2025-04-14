@@ -8,11 +8,13 @@ import starFull from "../../assets/star-full.svg"
 
 export default function Products() {
     const products = useLoaderData();
+    const fakeDate = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric" })
+        .format(new Date((new Date).getTime() + 1000 * 60 * 60 * 24 * 7))
 
     return (
         <>
             <div className={styles.header}>
-                <h2>Our Products</h2>
+                <h2>2 year anniversary event - free worldwide shipping until {fakeDate}</h2>
             </div>
             <div className={styles.products}>
                 {products.map(product =>

@@ -1,18 +1,20 @@
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, Link } from "react-router-dom";
 import QuantitySelector from "../QuantitySelector/QuantitySelector";
 import { useRef } from "react";
 import styles from "./Cart.module.css"
 import Decimal from "decimal.js";
+import truck from "../../assets/truck-outline.svg"
+
 
 const formatPrice = price => Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(price);
 
 export default function Cart() {
     const { cart, setCart } = useOutletContext();
 
-    const updateQuantity = (item) =>
+    const updateQuantity = (product) =>
         (newQuantity) => {
             const nextCart = cart.map(entry =>
-                entry.product.id == item.product.id ?
+                entry.product.id == product.product.id ?
                     { ...entry, quantity: newQuantity } :
                     entry
             );
@@ -25,20 +27,34 @@ export default function Cart() {
         ).toNumber()
     )
 
+    const deliveryDateStart = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric" })
+        .format(new Date((new Date).getTime() + 1000 * 60 * 60 * 24 * 7))
+    const deliveryDateEnd = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric" })
+        .format(new Date((new Date).getTime() + 1000 * 60 * 60 * 24 * 14))
+
 
 
 
     if (cart.length == 0) {
         return (
-            <h2>Cart is empty</h2>
+            <div className={styles.cartBase}>
+                <h2 className={styles.title}>Cart</h2>
+                <div className={styles.cartEmptyCard}>
+                    <span>Your cart is currently empty</span>
+                    <Link to="/products">
+                        <button>Check out our products</button>
+                    </Link>
+                </div>
+            </div>
         )
+
     }
 
     return (
-        <>
-            <h2>Cart</h2>
+        <div className={styles.cartBase}>
+            <h2 className={styles.title}>Cart</h2>
             <div className={styles.cartContainer}>
-                <div className={styles.cartItems}>
+                <div className={styles.cartProducts}>
                     <div className={styles.cartHeader}>
                         <p>Product</p>
                         <div>
@@ -46,21 +62,31 @@ export default function Cart() {
                             <p>Price</p>
                         </div>
                     </div>
-                    {cart.map(item =>
-                        <ItemDisplay
-                            item={item}
-                            callback={updateQuantity(item)}
+                    {cart.map(product =>
+                        <ProductDisplay
+                            product={product}
+                            callback={updateQuantity(product)}
                         />)}
                 </div>
                 <div className={styles.cartSummary}>
-                    <h2>Summary</h2>
-                    <div className={styles.subtotal}>
-                        <p>Subtotal:</p>
-                        <p>{totalPrice}</p>
+                    <div>
+                        <h2>Summary</h2>
+                        <div className={styles.subtotal}>
+                            <p>Subtotal:</p>
+                            <p>{totalPrice}</p>
+                        </div>
+                        <div className={styles.shipping}>
+                            <p>Shipping:</p>
+                            <p>$0.00</p>
+                        </div>
                     </div>
-                    <div className={styles.shipping}>
-                        <p>Shipping:</p>
-                        <p>$0.00</p>
+
+                    <div className={styles.delivery}>
+                        <img src={truck} alt="" />
+                        <div>
+                            <p>Estimated delivery time</p>
+                            <p>{deliveryDateStart} - {deliveryDateEnd}</p>
+                        </div>
                     </div>
 
                     <div className={styles.total}>
@@ -71,36 +97,40 @@ export default function Cart() {
                     <button className={styles.checkout}>Go to checkout</button>
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 
-function ItemDisplay({ item, callback }) {
+function ProductDisplay({ product, callback }) {
     const quantityRef = useRef(null);
 
     return (
-        <div className={styles.cartEntry} key={item.product.id} data-id={item.product.id} >
+        <div className={styles.cartEntry} key={product.product.id} data-id={product.product.id} >
             <div className={styles.productInfo}>
                 <div className={styles.imageContainer}>
-                    <img src={item.product.image} alt="" />
+                    <Link to={`/products/${product.product.id}`}>
+                        <img src={product.product.image} alt="" />
+                    </Link>
                 </div>
                 <span className={styles.productTitle}>
-                    {item.product.title}
+                    <Link to={`/products/${product.product.id}`}>
+                        {product.product.title}
+                    </Link>
                 </span>
             </div>
 
             <div className={styles.productQuantity}>
                 <QuantitySelector
-                    initQuantity={item.quantity}
-                    maximum={item.product.rating.count}
+                    initQuantity={product.quantity}
+                    maximum={product.product.rating.count}
                     ref={quantityRef}
                     callback={() => callback(parseInt(quantityRef.current.value, 10))}
                 />
 
                 <span>
-                    {formatPrice((Decimal(item.product.price).mul(item.quantity)).toNumber())}
+                    {formatPrice((Decimal(product.product.price).mul(product.quantity)).toNumber())}
                 </span>
             </div>
-        </div>
+        </div >
     )
 }
