@@ -15,15 +15,15 @@ export default function Products() {
                 <h2>Our Products</h2>
             </div>
             <div className={styles.products}>
-                {products.map(item =>
-                    <ProductCard item={item} />
+                {products.map(product =>
+                    <ProductCard product={product} />
                 )}
             </div>
         </>
     )
 }
 
-function ProductCard({ item }) {
+function ProductCard({ product }) {
     const ratingStars = ((rating) => {
         const res = [];
         for (let i = 0; i < 5; i++) {
@@ -32,22 +32,23 @@ function ProductCard({ item }) {
             else res.push(starNone)
         }
         return res
-    })(item.rating.rate)
+    })(product.rating.rate)
+    const formatPrice = price => Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(price)
 
     return (
 
-        <div key={item.id} className={styles.card}>
-            <Link to={`./${item.id}`}>
+        <div key={product.id} className={styles.card}>
+            <Link to={`./${product.id}`}>
                 <div className={styles.productImage}>
-                    <img src={item.image} alt={item.title} />
+                    <img src={product.image} alt={product.title} />
                 </div>
             </Link >
-            <Link to={`./${item.id}`}>
+            <Link to={`./${product.id}`}>
                 <span className={styles.productTitle}>
-                    {item.title}
+                    {product.title}
                 </span>
             </Link>
-            <span className={styles.price}>${item.price}</span>
+            <span className={styles.price}>{formatPrice(Number(product.price))}</span>
             <div className={styles.starRating}>
                 {ratingStars.map(img => <img src={img} />)}
             </div>

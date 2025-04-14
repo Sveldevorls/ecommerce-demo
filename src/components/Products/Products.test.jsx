@@ -10,6 +10,8 @@ const routes = [{
     loader: () => testProductArray,
 }];
 
+const formatPrice = price => Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(price)
+
 describe("Products module", () => {
     it.each(testProductArray)("Displays product details in cards", async (product) => {
         const router = createMemoryRouter(
@@ -19,7 +21,7 @@ describe("Products module", () => {
         render(<RouterProvider router={router} />);
 
         expect(await screen.findByText(product.title)).toBeInTheDocument();
-        expect(await screen.findByText(`$${product.price}`)).toBeInTheDocument();
+        expect(await screen.findByText(formatPrice(Number(product.price)))).toBeInTheDocument();
         expect(await screen.findByAltText(product.title)).toBeInTheDocument();
     })
 })

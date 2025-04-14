@@ -2,11 +2,14 @@ import { describe, it, expect } from 'vitest'
 import { render, screen, within } from "@testing-library/react";
 import { createMemoryRouter, RouterProvider, Outlet } from 'react-router-dom';
 import Cart from './Cart';
-import AppMock from './AppMock';
+import AppMock from '../AppMock';
 import userEvent from '@testing-library/user-event';
+import Decimal from 'decimal.js';
 
 import { testCart } from '../../test-data';
 
+
+const priceFormatter = Intl.NumberFormat("en-US", { style: "currency", currency: "USD" })
 
 describe("Cart page", () => {
     it("Displays error message when cart is empty", async () => {
@@ -86,11 +89,12 @@ describe("Cart page", () => {
             { initialEntries: ["/cart"] }
         );
 
+        const productPrice = priceFormatter.format(Decimal(cartEntry.product.price).mul(cartEntry.quantity).toNumber());
+
         const { container } = render(<RouterProvider router={router} />);
 
-        const productTotalPrice = cartEntry.product.price * cartEntry.quantity;
         const itemDiv = container.querySelector(`[data-id='${cartEntry.product.id}']`)
-        expect(within(itemDiv).getByText(productTotalPrice.toLocaleString())).toBeInTheDocument()
+        expect(within(itemDiv).getByText(productPrice)).toBeInTheDocument()
     })
 })
 
@@ -112,7 +116,13 @@ describe("Cart page quantity selector", () => {
             { initialEntries: ["/cart"] }
         );
 
-        const expectPriceFromQuantity = (quantity) => (cartEntry.product.price * quantity);
+        const expectedPriceFromQuantity = (quantity) => 
+            priceFormatter.format(
+            Decimal(cartEntry.product.price)
+            .mul(quantity)
+            .toNumber()
+        );
+
         const user = userEvent.setup();
         const initialQuantity = cartEntry.quantity;
 
@@ -124,20 +134,20 @@ describe("Cart page quantity selector", () => {
         const decreaseButton = within(itemDiv).getByRole("button", { name: "-" });
 
         await user.click(increaseButton);
-        expect(within(itemDiv).getByText(expectPriceFromQuantity(initialQuantity + 1).toLocaleString())).toBeInTheDocument()
+        expect(within(itemDiv).getByText(expectedPriceFromQuantity(initialQuantity + 1))).toBeInTheDocument()
 
         await user.click(increaseButton);
-        expect(within(itemDiv).getByText(expectPriceFromQuantity(initialQuantity + 2).toLocaleString())).toBeInTheDocument()
+        expect(within(itemDiv).getByText(expectedPriceFromQuantity(initialQuantity + 2))).toBeInTheDocument()
 
         await user.click(decreaseButton);
         await user.click(decreaseButton);
         await user.click(decreaseButton);
-        expect(within(itemDiv).getByText(expectPriceFromQuantity(initialQuantity - 1).toLocaleString())).toBeInTheDocument()
+        expect(within(itemDiv).getByText(expectedPriceFromQuantity(initialQuantity - 1))).toBeInTheDocument()
 
         await user.type(quantityInput, "{backspace}{backspace}37")
-        expect(within(itemDiv).getByText(expectPriceFromQuantity(37).toLocaleString())).toBeInTheDocument()
+        expect(within(itemDiv).getByText(expectedPriceFromQuantity(37))).toBeInTheDocument()
 
         await user.type(quantityInput, "11111")
-        expect(within(itemDiv).getByText(expectPriceFromQuantity(100).toLocaleString())).toBeInTheDocument()
+        expect(within(itemDiv).getByText(expectedPriceFromQuantity(100))).toBeInTheDocument()
     })
 })

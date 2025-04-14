@@ -5,12 +5,13 @@ import userEvent from '@testing-library/user-event';
 
 // test data
 import ProductPage from './ProductPage';
-import App from '../../App';
+import AppMock from '../AppMock';
 import { testProduct } from '../../test-data';
 
 
 const cartAddSuccessMessage = "Added to cart";
 const cartAddFailMessage = "Can't add more to cart";
+const formatPrice = price => Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(price)
 
 describe("Product page display", () => {
     const routes = [{
@@ -53,7 +54,7 @@ describe("Product page display", () => {
         expect(await screen.findByText(testProduct.title)).toBeInTheDocument();
         expect(await screen.findByText(testProduct.description)).toBeInTheDocument();
         expect(await screen.findByText(testProduct.rating.rate)).toBeInTheDocument();
-        expect(await screen.findByText(`$${testProduct.price}`)).toBeInTheDocument();
+        expect(await screen.findByText(formatPrice(Number(testProduct.price)))).toBeInTheDocument();
         expect(await screen.findByAltText(testProduct.title)).toBeInTheDocument();
         
     })
@@ -73,7 +74,7 @@ describe("Product page display", () => {
 describe("Product page cart adding function", () => {
     const routes = [{
         path: "/",
-        element: <App />,
+        element: <AppMock />,
         children: [
             {
                 path: "/products/:productID",

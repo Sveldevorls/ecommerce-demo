@@ -30,11 +30,6 @@ export default function ProductPage() {
     })(product.rating.rate)
 
     function handleAddToCartClick(item) {
-        /* if (productStockCount == 0) {
-            setMessage("Stock is empty now");
-            return
-        } */
-
         const nextCart = cart.slice();
         const cartItemEntry = nextCart.find(entry => entry.product.id == item.id);
 
@@ -70,6 +65,8 @@ export default function ProductPage() {
         }, 5000)
     }
 
+    const formatPrice = price => Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(price)
+
     return (
         <div className={styles.productDisplay}>
             <div className={styles.productImage}>
@@ -78,20 +75,24 @@ export default function ProductPage() {
 
             <div className={styles.productDetails}>
                 <div className={styles.productHeader}>
-                    <h2>{product && product.title}</h2>
+                    <h2>{product.title}</h2>
                     <div className={styles.rating}>
                         <p>{product.rating.rate.toFixed(1)}</p>
                         <div className={styles.starRating}>
                             {ratingStars.map(star => <img src={star} />)}
                         </div>
                     </div>
-                    <p className={styles.price}>${product.price}</p>
+                    <p className={styles.price}>
+                        {formatPrice(Number(product.price))}
+                    </p>
                 </div>
 
-                <p className={styles.productDescription}>{product.description}</p>
+                <p className={styles.productDescription}>
+                    {product.description}
+                </p>
 
                 <div className={styles.productAdd}>
-                    <span>Qty</span>
+                    <span>Quantity</span>
                     <QuantitySelector
                         initQuantity={1}
                         maximum={productStockCount}
