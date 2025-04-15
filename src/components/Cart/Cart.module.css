@@ -14,7 +14,7 @@
     width: fit-content;
     padding: 2em;
     border-radius: 0.5em;
-    
+
     span {
         display: block;
     }
@@ -61,7 +61,7 @@
     display: flex;
     justify-content: space-between;
     font-weight: 600;
-    
+
     p:last-child {
         font-size: 1.1em;
     }
@@ -77,7 +77,7 @@
     margin-bottom: 2lh;
 }
 
-.total{
+.total {
     padding-top: 0.75em;
     margin-top: auto;
     border-top: 1px solid #bebebe;
@@ -123,12 +123,33 @@
     }
 }
 
-.productQuantity {
-    flex-grow: 1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.cartEntryRight {
+    height: 100%;
     width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.priceColumn {
+    height: 100%;
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    align-items: center;
+    margin-left: auto;
+
+    @media (width > 650px) {
+        &::before {
+            content: "";
+        }
+    }
+
+    @media (max-width: 650px) {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-left: 1em;
+    }
 }
 
 .productInfo {
@@ -197,4 +218,72 @@
     img {
         height: 32px;
     }
+}
+
+.removeButton {
+    align-self: end;
+    color: rgb(237, 34, 34);
+}
+
+.dialogContainer {
+    visibility: hidden;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.removeDialog {
+    padding: 2em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: none;
+    border-radius: 1em;
+    font-size: 1.2rem;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+
+    >div {
+        display: flex;
+        justify-content: space-around;
+        gap: 1em;
+        width: 100%;
+    }
+
+    img {
+        max-height: 8em;
+        object-fit: contain;
+        aspect-ratio: 1/1;
+    }
+
+    button {
+        font-size: 1.1rem;
+        padding: 0.5em 1em;
+        border-radius: 0.25em;
+        transition: filter 0.3s ease;
+    }
+
+    button:hover {
+        filter: brightness(0.9);
+    }
+}
+
+.dialogItemInfo {
+    text-align: start;
+}
+
+.dialogButtons {
+    flex-wrap: wrap;
+}
+
+.confirmButton {
+    background: #ffbc00;
 }

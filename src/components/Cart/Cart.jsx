@@ -1,6 +1,6 @@
 import { useOutletContext, Link } from "react-router-dom";
 import QuantitySelector from "../QuantitySelector/QuantitySelector";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import styles from "./Cart.module.css"
 import Decimal from "decimal.js";
 import truck from "../../assets/truck-outline.svg"
@@ -10,6 +10,9 @@ const formatPrice = price => Intl.NumberFormat("en-US", { style: "currency", cur
 
 export default function Cart() {
     const { cart, setCart } = useOutletContext();
+    const [removalProduct, setRemovalProduct] = useState(null);
+    const removeConfirmRef = useRef(null);
+    const dialogContainerRef = useRef(null);
 
     const updateQuantity = (product) =>
         (newQuantity) => {
@@ -32,80 +35,113 @@ export default function Cart() {
     const deliveryDateEnd = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric" })
         .format(new Date((new Date).getTime() + 1000 * 60 * 60 * 24 * 14))
 
+    function handleRemoveDialogClick(e) {
+        if (!e.target.id) {
+            return
+        }
+        if (e.target.id == "confirm") {
+            setCart(cart.filter(entry => entry.product.id != removalProduct.id));
+        }
 
+        dialogContainerRef.current.style.visibility = "hidden";
+        removeConfirmRef.current.close();
+    }
 
 
     if (cart.length == 0) {
         return (
-            <div className={styles.cartBase}>
-                <h2 className={styles.title}>Cart</h2>
-                <div className={styles.cartEmptyCard}>
-                    <span>Your cart is currently empty</span>
-                    <Link to="/products">
-                        <button>Check out our products</button>
-                    </Link>
+            <>
+                <div className={styles.cartBase}>
+                    <h2 className={styles.title}>Cart</h2>
+                    <div className={styles.cartEmptyCard}>
+                        <span>Your cart is currently empty</span>
+                        <Link to="/products">
+                            <button>Check out our products</button>
+                        </Link>
+                    </div>
                 </div>
-            </div>
+            </>
         )
-
     }
 
     return (
-        <div className={styles.cartBase}>
-            <h2 className={styles.title}>Cart</h2>
-            <div className={styles.cartContainer}>
-                <div className={styles.cartProducts}>
-                    <div className={styles.cartHeader}>
-                        <p>Product</p>
-                        <div>
-                            <p>Quantity</p>
-                            <p>Price</p>
+        <>
+            <div className={styles.cartBase}>
+                <h2 className={styles.title}>Cart</h2>
+                <div className={styles.cartContainer}>
+                    <div className={styles.cartProducts}>
+                        <div className={styles.cartHeader}>
+                            <p>Product</p>
+                            <div>
+                                <p>Quantity</p>
+                                <p>Price</p>
+                            </div>
                         </div>
+                        {cart.map(product =>
+                            <ProductDisplay
+                                product={product}
+                                callback={updateQuantity(product)}
+                                onRemoveClick={() => {
+                                    setRemovalProduct(product.product);
+                                    dialogContainerRef.current.style.visibility = "visible";
+                                    removeConfirmRef.current.show();
+                                }}
+                            />)}
                     </div>
-                    {cart.map(product =>
-                        <ProductDisplay
-                            product={product}
-                            callback={updateQuantity(product)}
-                        />)}
-                </div>
-                <div className={styles.cartSummary}>
-                    <div>
-                        <h2>Summary</h2>
-                        <div className={styles.subtotal}>
-                            <p>Subtotal:</p>
+                    <div className={styles.cartSummary}>
+                        <div>
+                            <h2>Summary</h2>
+                            <div className={styles.subtotal}>
+                                <p>Subtotal:</p>
+                                <p>{totalPrice}</p>
+                            </div>
+                            <div className={styles.shipping}>
+                                <p>Shipping:</p>
+                                <p>$0.00</p>
+                            </div>
+                        </div>
+
+                        <div className={styles.delivery}>
+                            <img src={truck} alt="" />
+                            <div>
+                                <p>Estimated delivery time</p>
+                                <p>{deliveryDateStart} - {deliveryDateEnd}</p>
+                            </div>
+                        </div>
+
+                        <div className={styles.total}>
+                            <h2>Total</h2>
                             <p>{totalPrice}</p>
                         </div>
-                        <div className={styles.shipping}>
-                            <p>Shipping:</p>
-                            <p>$0.00</p>
-                        </div>
-                    </div>
 
-                    <div className={styles.delivery}>
-                        <img src={truck} alt="" />
-                        <div>
-                            <p>Estimated delivery time</p>
-                            <p>{deliveryDateStart} - {deliveryDateEnd}</p>
-                        </div>
+                        <button className={styles.checkout}>Go to checkout</button>
                     </div>
-
-                    <div className={styles.total}>
-                        <h2>Total</h2>
-                        <p>{totalPrice}</p>
-                    </div>
-
-                    <button className={styles.checkout}>Go to checkout</button>
                 </div>
             </div>
-        </div>
+            <div id="dialogContainer" className={styles.dialogContainer} ref={dialogContainerRef} onClick={(e) => handleRemoveDialogClick(e)}>
+                <dialog ref={removeConfirmRef} className={styles.removeDialog}>
+                    <p>Are you sure? This action can not be reversed</p>
+                    <div className={styles.dialogItemInfo}>
+                        {removalProduct && <img src={removalProduct.image} alt="Item image" />}
+                        <span className={styles.productTitle}>
+                            {removalProduct && removalProduct.title}
+                        </span>
+                    </div>
+                    <div className={styles.dialogButtons}>
+                        <button id="cancel">Cancel</button>
+                        <button id="confirm" className={styles.confirmButton}>Yes, remove this item</button>
+                    </div>
+                </dialog>
+            </div>
+        </>
     )
 }
 
-function ProductDisplay({ product, callback }) {
+function ProductDisplay({ product, callback, onRemoveClick }) {
     const quantityRef = useRef(null);
 
     return (
-        <div className={styles.cartEntry} key={product.product.id} data-id={product.product.id} >
+        <div className={styles.cartEntry} key={product.product.id} data-productid={product.product.id} >
             <div className={styles.productInfo}>
                 <div className={styles.imageContainer}>
                     <Link to={`/products/${product.product.id}`}>
@@ -119,17 +155,21 @@ function ProductDisplay({ product, callback }) {
                 </span>
             </div>
 
-            <div className={styles.productQuantity}>
+            <div className={styles.cartEntryRight}>
                 <QuantitySelector
                     initQuantity={product.quantity}
                     maximum={product.product.rating.count}
                     ref={quantityRef}
                     callback={() => callback(parseInt(quantityRef.current.value, 10))}
                 />
-
-                <span>
-                    {formatPrice((Decimal(product.product.price).mul(product.quantity)).toNumber())}
-                </span>
+                <div className={styles.priceColumn}>
+                    <p>
+                        {formatPrice((Decimal(product.product.price).mul(product.quantity)).toNumber())}
+                    </p>
+                    <button onClick={onRemoveClick} className={styles.removeButton}>
+                        Remove
+                    </button>
+                </div>
             </div>
         </div >
     )
