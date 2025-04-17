@@ -1,0 +1,16 @@
+:root {
+    /* Button */
+    --button-background-color: #ffbc00;
+
+    /* Text */
+    --text-color-light: #ffffff;
+    --text-color-dark: #222222;
+
+    /* Homepage */
+
+    /* Announcement banner */
+    --announcement-background-color: #ecbb59;
+
+    /* Footer */
+    --footer-background-color: #222222;
+}
