@@ -1,9 +1,13 @@
 import { useOutletContext, Link } from "react-router-dom";
-import QuantitySelector from "../QuantitySelector/QuantitySelector";
 import { useRef, useState } from "react";
-import styles from "./Cart.module.css"
 import Decimal from "decimal.js";
-import truck from "../../assets/truck-outline.svg"
+import QuantitySelector from "../QuantitySelector/QuantitySelector";
+
+import "../../colors.css";
+import components from "../../components.module.css";
+import styles from "./Cart.module.css";
+
+import truck from "../../assets/truck-outline.svg";
 
 
 const formatPrice = price => Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(price);
@@ -14,7 +18,7 @@ export default function Cart() {
     const removeConfirmRef = useRef(null);
     const dialogContainerRef = useRef(null);
 
-    const updateQuantity = (product) =>
+    const updateProuductQuantity = (product) =>
         (newQuantity) => {
             const nextCart = cart.map(entry =>
                 entry.product.id == product.product.id ?
@@ -22,55 +26,55 @@ export default function Cart() {
                     entry
             );
             setCart(nextCart);
-        }
+        };
 
     const totalPrice = formatPrice(
         cart.reduce((sum, cartEntry) =>
             Decimal.add(sum, Decimal(cartEntry.product.price).mul(cartEntry.quantity)), Decimal(0)
         ).toNumber()
-    )
+    );
 
     const deliveryDateStart = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric" })
-        .format(new Date((new Date).getTime() + 1000 * 60 * 60 * 24 * 7))
+        .format(new Date((new Date).getTime() + 1000 * 60 * 60 * 24 * 7));
     const deliveryDateEnd = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric" })
-        .format(new Date((new Date).getTime() + 1000 * 60 * 60 * 24 * 14))
+        .format(new Date((new Date).getTime() + 1000 * 60 * 60 * 24 * 14));
 
     function handleRemoveDialogClick(e) {
         if (!e.target.id) {
-            return
-        }
+            return;
+        };
         if (e.target.id == "confirm") {
             setCart(cart.filter(entry => entry.product.id != removalProduct.id));
-        }
+        };
 
         dialogContainerRef.current.style.visibility = "hidden";
         removeConfirmRef.current.close();
-    }
+    };
 
 
     if (cart.length == 0) {
         return (
-            <>
-                <div className={styles.cartBase}>
-                    <h2 className={styles.title}>Cart</h2>
-                    <div className={styles.cartEmptyCard}>
-                        <span>Your cart is currently empty</span>
-                        <Link to="/products">
-                            <button>Check out our products</button>
+            <div id="cart">
+                <div className={styles.cart}>
+                    <h2 className={components.title}>Cart</h2>
+                    <div className={`${components.card} ${styles.cartEmptyCard}`}>
+                        <p>Your cart is currently empty</p>
+                        <Link to="/products" className={components.button}>
+                            Check out our products
                         </Link>
                     </div>
                 </div>
-            </>
-        )
-    }
+            </div>
+        );
+    };
 
     return (
-        <>
-            <div className={styles.cartBase}>
-                <h2 className={styles.title}>Cart</h2>
+        <div id="cart">
+            <div className={styles.cart}>
+                <h2 className={components.title}>Cart</h2>
                 <div className={styles.cartContainer}>
                     <div className={styles.cartProducts}>
-                        <div className={styles.cartHeader}>
+                        <div className={styles.cartProductstHeader}>
                             <p>Product</p>
                             <div>
                                 <p>Quantity</p>
@@ -80,75 +84,103 @@ export default function Cart() {
                         {cart.map(product =>
                             <ProductDisplay
                                 product={product}
-                                callback={updateQuantity(product)}
+                                callback={updateProuductQuantity(product)}
                                 onRemoveClick={() => {
                                     setRemovalProduct(product.product);
                                     dialogContainerRef.current.style.visibility = "visible";
                                     removeConfirmRef.current.show();
                                 }}
-                            />)}
+                            />
+                        )}
                     </div>
-                    <div className={styles.cartSummary}>
-                        <div>
+                    <div className={`${styles.cartSummary} ${components.card}`}>
+                        <div className={styles.cartSummaryPrices}>
                             <h2>Summary</h2>
-                            <div className={styles.subtotal}>
+                            <div className={styles.cartSummarySubtotal}>
                                 <p>Subtotal:</p>
                                 <p>{totalPrice}</p>
                             </div>
-                            <div className={styles.shipping}>
+                            <div className={styles.cartSummaryShipping}>
                                 <p>Shipping:</p>
                                 <p>$0.00</p>
                             </div>
                         </div>
 
-                        <div className={styles.delivery}>
-                            <img src={truck} alt="" />
+                        <div className={styles.cartSummaryDelivery}>
+                            <img
+                                className={components.iconLarge}
+                                src={truck}
+                            />
                             <div>
                                 <p>Estimated delivery time</p>
                                 <p>{deliveryDateStart} - {deliveryDateEnd}</p>
                             </div>
                         </div>
 
-                        <div className={styles.total}>
+                        <div className={styles.cartSummaryTotal}>
                             <h2>Total</h2>
                             <p>{totalPrice}</p>
                         </div>
 
-                        <button className={styles.checkout}>Go to checkout</button>
+                        <button className={`${components.button} ${styles.cartSummaryCheckout}`}>
+                            Go to checkout
+                        </button>
                     </div>
                 </div>
             </div>
-            <div id="dialogContainer" className={styles.dialogContainer} ref={dialogContainerRef} onClick={(e) => handleRemoveDialogClick(e)}>
-                <dialog ref={removeConfirmRef} className={styles.removeDialog}>
+            <div
+                id="dialogContainer"
+                className={styles.dialogContainer}
+                ref={dialogContainerRef}
+                onClick={(e) => handleRemoveDialogClick(e)}
+            >
+                <dialog
+                    ref={removeConfirmRef}
+                    className={styles.removeDialog}
+                >
                     <p>Are you sure? This action can not be reversed</p>
                     <div className={styles.dialogItemInfo}>
-                        {removalProduct && <img src={removalProduct.image} alt="Item image" />}
-                        <span className={styles.productTitle}>
+                        {removalProduct &&
+                            <div className={styles.cartProductImage}>
+                                <img src={removalProduct.image} alt="Item image" />
+                            </div>
+                        }
+                        <p className={`${components.productTitle} ${styles.dialogProductTitle}`}>
                             {removalProduct && removalProduct.title}
-                        </span>
+                        </p>
                     </div>
                     <div className={styles.dialogButtons}>
-                        <button id="cancel">Cancel</button>
-                        <button id="confirm" className={styles.confirmButton}>Yes, remove this item</button>
+                        <button
+                            id="cancel"
+                            className={`${components.button} ${styles.dialogCancelButton}`}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            id="confirm"
+                            className={components.button}
+                        >
+                            Yes, remove this item
+                        </button>
                     </div>
                 </dialog>
             </div>
-        </>
-    )
-}
+        </div>
+    );
+};
 
 function ProductDisplay({ product, callback, onRemoveClick }) {
     const quantityRef = useRef(null);
 
     return (
         <div className={styles.cartEntry} key={product.product.id} data-productid={product.product.id} >
-            <div className={styles.productInfo}>
-                <div className={styles.imageContainer}>
+            <div className={styles.cartEntryProductInfo}>
+                <div className={styles.cartProductImage}>
                     <Link to={`/products/${product.product.id}`}>
                         <img src={product.product.image} alt="" />
                     </Link>
                 </div>
-                <span className={styles.productTitle}>
+                <span className={components.productTitle}>
                     <Link to={`/products/${product.product.id}`}>
                         {product.product.title}
                     </Link>
@@ -162,15 +194,15 @@ function ProductDisplay({ product, callback, onRemoveClick }) {
                     ref={quantityRef}
                     callback={() => callback(parseInt(quantityRef.current.value, 10))}
                 />
-                <div className={styles.priceColumn}>
+                <div className={styles.cartEntryPriceColumn}>
                     <p>
                         {formatPrice((Decimal(product.product.price).mul(product.quantity)).toNumber())}
                     </p>
-                    <button onClick={onRemoveClick} className={styles.removeButton}>
+                    <button onClick={onRemoveClick} className={styles.cartEntryRemoveButton}>
                         Remove
                     </button>
                 </div>
             </div>
         </div >
-    )
-}
+    );
+};

@@ -1,5 +1,9 @@
-import { Link } from "react-router-dom"
-import styles from "./Footer.module.css"
+import { Link } from "react-router-dom";
+
+import "../../colors.css";
+import styles from "./Footer.module.css";
+import components from "../../components.module.css";
+
 
 export default function Footer() {
     return (
@@ -10,8 +14,13 @@ export default function Footer() {
                     <h2>Subscribe to our newsletter</h2>
                     <span>We only send biweekly store updates and important announcements</span>
                     <div className={styles.inputContainer}>
-                        <input type="email" name="newsletter-email" id="newsletter-email" placeholder="email address" />
-                        <button className={styles.button}>Subscribe</button>
+                        <input
+                            type="email"
+                            name="newsletter-email"
+                            id="newsletter-email"
+                            placeholder="email address"
+                        />
+                        <button className={components.button}>Subscribe</button>
                     </div>
                 </div>
             </div>
@@ -19,8 +28,8 @@ export default function Footer() {
                 <span>Lipsum, 2025</span>
             </div>
         </div>
-    )
-}
+    );
+};
 
 function FooterNavbar() {
     const routes = [
@@ -54,7 +63,7 @@ function FooterNavbar() {
                     { title: "My cart", path: "/cart" },
                 ]
         },
-    ]
+    ];
 
     return (
         <div className={styles.footerNavbar}>
@@ -71,6 +80,6 @@ function FooterNavbar() {
                 </div>
             )}
         </div>
-    )
-}
+    );
+};
 

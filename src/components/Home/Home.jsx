@@ -1,14 +1,15 @@
 import { Link } from "react-router-dom";
-import components from "../../components.module.css";
+
 import styles from "./Home.module.css";
+import components from "../../components.module.css";
+
 
 export default function Home() {
     const fakeDate = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric" })
-        .format(new Date((new Date).getTime() + 1000 * 60 * 60 * 24 * 7))
-
+        .format(new Date((new Date).getTime() + 1000 * 60 * 60 * 24 * 7));
 
     return (
-        <>
+        <div id="home">
             <div className={components.announcementBanner}>
                 <h2>2 year anniversary event - free worldwide shipping until {fakeDate}</h2>
             </div>
@@ -26,9 +27,9 @@ export default function Home() {
                     </Link>
                 </div>
             </div>
-            <div className={styles.infoSection}>
-                <div className={styles.infoImage}></div>
-                <div className={styles.infoContent}>
+            <div className={`${components.card} ${styles.infoCard}`}>
+                <div className={styles.infoCardImage}></div>
+                <div className={styles.infoCardContent}>
                     <h2>Lorem ipsum</h2>
                     <p>
                         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus ipsa velit ad eos numquam aut aliquam provident architecto necessitatibus, inventore tempore impedit excepturi nulla ipsam. Corrupti obcaecati corporis voluptatum beatae.
@@ -38,6 +39,6 @@ export default function Home() {
                     </Link>
                 </div>
             </div>
-        </>
-    )
-}
+        </div>
+    );
+};

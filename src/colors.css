@@ -6,11 +6,15 @@
     --text-color-light: #ffffff;
     --text-color-dark: #222222;
 
-    /* Homepage */
+    /* Card */
+    --card-background-color: #f3f5f8;
 
     /* Announcement banner */
     --announcement-background-color: #ecbb59;
 
     /* Footer */
     --footer-background-color: #222222;
+
+    /* Box shadow */
+    --box-shadow-color: #d9d9d9;
 }

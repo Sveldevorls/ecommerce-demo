@@ -1,4 +1,4 @@
-.productDisplay {
+.productPage {
     width: 100%;
     padding: 2lh 5%;
     gap: 1em;
@@ -10,6 +10,8 @@
         flex-direction: column;
     }
 }
+
+/* Product image */
 
 .productImage {
     display: flex;
@@ -25,6 +27,8 @@
     }
 }
 
+/* Product details */
+
 .productDetails {
     display: flex;
     flex-direction: column;
@@ -34,69 +38,75 @@
     flex-grow: 3;
 }
 
-.productHeader {
+/* Product details > title and rating header */
+
+.productDetailsHeader {
     display: flex;
     flex-direction: column;
     gap: 0.5lh;
 }
 
-.productDescription {
-    width: 100%;
-}
-
-.price {
-    font-size: 1.5em;
-}
-
-.productAdd {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5lh;
-
-    >span:first-child {
-        font-weight: bold;
-    }
-}
-
-.rating {
+.productDetailsRating {
     display: flex;
     gap: 2%;
 }
 
-.starRating {
-    display: flex;
-
-    img {
-        height: 18px;
-    }
+.productDetailsStar {
+    height: 18px;
 }
 
-.addButton {
+/* Product details > product price */
+
+.productDetailsPrice {
+    font-size: 1.5em;
+}
+
+/* Product details > product description */
+
+.productDetailsDescription {
+    width: 100%;
+}
+
+/* Product details > selector and add button */
+
+.productDetailsButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.productDetailsButtons > p {
+    font-weight: bold;
+}
+
+.productDetailsAddButton {
     width: 80%;
-    padding: 0.5lh 2em;
-    margin-top: 1lh;
-    
-    font-size: 1.25em;
+    padding: 0.75em 2em;
+    margin-top: 1em;
+    font-size: 1.2em;
     
     align-self: center;
     
-    border: none;
     border-radius: 5px;
     background-color: #e0400f;
     color: #fff;
 }
 
+
+
+/* Message */
+
 .actionMessage {
-    width: fit-content;
-    padding: 1em 2em;
     opacity: 0;
 
+    width: fit-content;
+    padding: 1em 2em;
+    border-radius: 0.5em;
+    
     position: sticky;
     bottom: 2em;
     left: 50%;
 
     transform: translateX(-50%);
-    border-radius: 0.5em;
-    
     transition: opacity 0.5s ease;
 }

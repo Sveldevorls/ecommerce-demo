@@ -1,31 +1,37 @@
-import { Link, NavLink } from "react-router-dom"
-import styles from "./Navbar.module.css"
-import logo from "../../assets/logo.png"
-import cart from "../../assets/cart.svg"
+import { Link, NavLink } from "react-router-dom";
+
+import "../../colors.css";
+import styles from "./Navbar.module.css";
+import components from "../../components.module.css";
+
+import logo from "../../assets/logo.png";
+import cart from "../../assets/cart.svg";
 
 export default function Navbar({ cartItemCount }) {
     return (
         <nav className={styles.navbar}>
-            <NavLink to="/" className={styles.logo}>
-                <img src={logo} alt="Lipsum" />
-            </NavLink>
-            <ul>
+            <div className={styles.logo}>
+                <Link to="/">
+                    <img src={logo} alt="Lipsum" />
+                </Link>
+            </div>
+            <ul className={styles.links}>
                 <li>
-                    <Link to="/products">Our products</Link>
+                    <NavLink to="/products">Our products</NavLink>
                 </li>
                 <li>
-                    <Link to="#">About us</Link>
+                    <NavLink to="/about-us">About us</NavLink>
                 </li>
                 <li>
-                    <Link to="#">Help</Link>
+                    <NavLink to="/help">Help</NavLink>
                 </li>
             </ul>
             <div className={styles.cart}>
                 <Link to="/cart">
-                    <img src={cart} className={styles.icon} alt="My cart" />
+                    <img src={cart} className={components.icon} alt="My cart" />
                     <span>{cartItemCount < 100 ? cartItemCount : "99+"}</span>
                 </Link>
             </div>
         </nav>
-    )
-}
+    );
+};

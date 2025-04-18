@@ -4,21 +4,21 @@
 
     border-radius: 5px;
     border: 1px solid black;
+}
 
-    input {
-        width: 3.5em;
-        text-align: center;
-        border: none;
-        border-left: 1px solid black;
-        border-right: 1px solid black;
-    }
+.quantitySelector >button {
+    padding: 0.6em;
+    aspect-ratio: 1/1;
+}
 
-    button {
-        padding: 0.6em;
-        aspect-ratio: 1/1;
-    }
+.quantitySelector >img {
+    width: 18px;
+}
 
-    img {
-        width: 18px;
-    }
+.quantitySelector >input {
+    width: 3.5em;
+    text-align: center;
+    border: none;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
 }
