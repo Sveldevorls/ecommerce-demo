@@ -1,0 +1,55 @@
+/* 404 not found */
+
+.notFound {
+    min-height: 100vh;
+    background: var(--card-background-color);
+
+    font-size: 1.25rem;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2.5em;
+}
+
+.notFound h2 {
+    margin-bottom: 0.25rem;
+}
+
+/* 404 not found > links */
+
+.notFoundLinks {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75em;
+}
+
+.notFoundLinks a {
+    display: block;
+    width: fit-content;
+    text-decoration: underline;
+
+    &:hover {
+        color: blue;
+    }
+}
+
+
+
+/* Product 404 */
+
+.productNotFound {
+    padding: 1.5em 2em;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+}
+
+.productNotFoundCard {
+    padding: 1em;
+}

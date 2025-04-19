@@ -15,7 +15,7 @@ export default function Home() {
             </div>
             <div className={styles.bannerContainer}>
                 <div className={styles.bannerContent}>
-                    <h1>Lorem ipsum</h1>
+                    <h1>Lipsum</h1>
                     <p>
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum, tempore deleniti dicta ex perferendis libero provident? Ipsum, dolores odit cupiditate aspernatur fuga, consectetur, vel voluptatem accusantium fugiat provident voluptas! Enim.
                     </p>

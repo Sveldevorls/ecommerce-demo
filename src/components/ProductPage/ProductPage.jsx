@@ -16,10 +16,6 @@ export default function ProductPage() {
     const quantityRef = useRef(null);
     const messageRef = useRef(null);
 
-    // Product doesnt exist (bad ID)
-    if (!product) return <h2>Error: product not found</h2>
-
-
     const productStockCount = product.rating.count;
     const ratingStars = ((rating) => {
         const res = [];
@@ -84,10 +80,11 @@ export default function ProductPage() {
                     <div className={styles.productDetailsRating}>
                         <p>{product.rating.rate.toFixed(1)}</p>
                         <div>
-                            {ratingStars.map(star =>
+                            {ratingStars.map((star, index) =>
                                 <img
                                     src={star}
-                                    class={styles.productDetailsStar}
+                                    className={styles.productDetailsStar}
+                                    key={index}
                                 />
                             )}
                         </div>

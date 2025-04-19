@@ -12,7 +12,6 @@ describe("Navbar module", () => {
                 <Navbar cartItemCount={itemCount} />
             </MemoryRouter>
         );
-        screen.debug();
-        expect(screen.getByText(itemCount.toString())).toBeInTheDocument();
+        expect(screen.getAllByText(itemCount.toString()).length).toBe(2);
     })
 })

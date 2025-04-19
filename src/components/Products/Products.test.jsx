@@ -22,6 +22,6 @@ describe("Products module", () => {
 
         expect(await screen.findByText(product.title)).toBeInTheDocument();
         expect(await screen.findByText(formatPrice(Number(product.price)))).toBeInTheDocument();
-        expect(await screen.findByAltText(product.title)).toBeInTheDocument();
+        expect((await screen.findAllByAltText("Product image")).length).toBe(2);
     })
 })

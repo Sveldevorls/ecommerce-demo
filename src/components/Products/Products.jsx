@@ -47,7 +47,7 @@ function ProductCard({ product }) {
         <div key={product.id} className={styles.productCard}>
             <Link to={`./${product.id}`}>
                 <div className={styles.productImage}>
-                    <img src={product.image} />
+                    <img src={product.image} alt="Product image"/>
                 </div>
             </Link >
             <Link to={`./${product.id}`}>

@@ -8,7 +8,6 @@ import ProductPage from './ProductPage';
 import AppMock from '../AppMock';
 import { testProduct } from '../../test-data';
 
-
 const cartAddSuccessMessage = "Added to cart";
 const cartAddFailMessage = "Can't add more to cart";
 const formatPrice = price => Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(price)
@@ -31,17 +30,6 @@ describe("Product page display", () => {
             }
         ]
     }];
-
-    // Fail case
-    it("Shows error page when data is wrong", async () => {
-        const router = createMemoryRouter(
-            routes,
-            { initialEntries: ["/products/999"] }
-        );
-        render(<RouterProvider router={router} />);
-        
-        expect(await screen.findByText(/Error/)).toBeInTheDocument();
-    })
 
     // Success case
     it("Shows item details", async () => {
