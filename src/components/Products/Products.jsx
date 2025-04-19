@@ -20,12 +20,15 @@ export default function Products() {
                 <h2>2 year anniversary event - free worldwide shipping until {fakeDate}</h2>
             </div>
             <div className={styles.products}>
-                {products.map(product =>
-                    <ProductCard
-                        product={product}
-                        key={product.title}
-                    />
-                )}
+                <h2 className={components.title}>Products</h2>
+                <div className={styles.productGrid}>
+                    {products.map(product =>
+                        <ProductCard
+                            product={product}
+                            key={product.title}
+                        />
+                    )}
+                </div>
             </div>
         </div>
     );
@@ -47,7 +50,7 @@ function ProductCard({ product }) {
         <div key={product.id} className={styles.productCard}>
             <Link to={`./${product.id}`}>
                 <div className={styles.productImage}>
-                    <img src={product.image} alt="Product image"/>
+                    <img src={product.image} alt="Product image" />
                 </div>
             </Link >
             <Link to={`./${product.id}`}>

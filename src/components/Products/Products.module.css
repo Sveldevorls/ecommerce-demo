@@ -4,7 +4,11 @@
     --product-card-border-color: #cccccc;
 
     padding: 1em 5%;
+    display: flex;
+    flex-direction: column;
+}
 
+.productGrid {
     display: grid;
     justify-content: center;
     grid-template-columns: repeat(auto-fill,
