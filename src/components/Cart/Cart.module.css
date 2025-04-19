@@ -72,7 +72,6 @@
 
 .cartEntry {
     padding: 1em 0;
-    position: relative;
 
     display: grid;
     grid-template-columns: 5fr 3fr;
@@ -85,12 +84,8 @@
     }
 }
 
-.cartEntry + .cartEntry::before {
-    content: "";
-    width: 100%;
-    border-bottom: 1px solid #cfcfcf;
-    position: absolute;
-    top: 0;
+.cartEntry + .cartEntry {
+    border-top: 1px solid #cfcfcf;
 }
 
 /* Cart item entries > product info */
@@ -190,6 +185,10 @@
     gap: 1em;
 
     font-weight: 600;
+
+    @media (width < 950px) {
+        justify-content: start;
+    }
 }
 
 .cartSummaryDelivery > div {

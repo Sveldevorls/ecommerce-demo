@@ -8,6 +8,8 @@
     flex-direction: column;
 }
 
+/* Products grid */
+
 .productGrid {
     display: grid;
     justify-content: center;
@@ -28,6 +30,12 @@
     border-radius: 0.5em;
     box-shadow: 0 2px 3px var(--box-shadow-color);
     border: 1px solid var(--product-card-border-color);
+
+    &:hover {
+        img {
+            scale: 1.025;
+        }
+    }
 }
 
 .productImage {
@@ -40,10 +48,6 @@
     height: 100%;
     object-fit: contain;
     transition: scale 0.4s ease-in-out;
-    
-    &:hover {
-        scale: 1.025;
-    }
 }
 
 .productPrice {
