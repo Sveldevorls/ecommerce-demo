@@ -1,12 +1,27 @@
-# React + Vite
+# E-commerce website demo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Lipsum — A simple frontend-only e-commerce demo SAP website.  
+Live demo at https://sveldevorls-ecommerce-demo.vercel.app/  
 
-Currently, two official plugins are available:
+Item data is fetched from https://fakestoreapi.com/.  
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Built with
+- React.js — website structure
+- React Router — client-side routing
+- Decimal.js — price handling
+- React Testing Library — unit tests
+- CSS Modules — styling
 
-## Expanding the ESLint configuration
+## Features
+- Responsive design that works on both mobile and PC
+- Simulated long-term cart storage with local storage
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Screenshots
+### Homepage
+![Homepage](https://github.com/Sveldevorls/ecommerce-demo/blob/main/screenshots/sRadzmNrlP.jpg)
+
+### Products listing
+![Products](https://github.com/Sveldevorls/ecommerce-demo/blob/main/screenshots/Uz59uoXftm.png)
+
+### Cart
+![Cart](https://github.com/Sveldevorls/ecommerce-demo/blob/main/screenshots/5P2095L3pt.png)
