@@ -26,6 +26,7 @@ export default function Cart() {
                     entry
             );
             setCart(nextCart);
+            localStorage.setItem("cart", JSON.stringify(nextCart));
         };
 
     const totalPrice = formatPrice(
@@ -40,12 +41,17 @@ export default function Cart() {
         .format(new Date((new Date).getTime() + 1000 * 60 * 60 * 24 * 14));
 
     function handleRemoveDialogClick(e) {
+        let nextCart;
+
         if (!e.target.id) {
             return;
         };
         if (e.target.id == "confirm") {
-            setCart(cart.filter(entry => entry.product.id != removalProduct.id));
+            nextCart = cart.filter(entry => entry.product.id != removalProduct.id);
         };
+
+        setCart(nextCart);
+        localStorage.setItem("cart", JSON.stringify(nextCart));
 
         dialogContainerRef.current.style.visibility = "hidden";
         removeConfirmRef.current.close();

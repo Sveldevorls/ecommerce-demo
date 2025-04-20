@@ -43,7 +43,9 @@ export default function ProductPage() {
                 return;
             };
             cartItemEntry.quantity += parseInt(quantityRef.current.value, 10);
+
             setCart(nextCart);
+            localStorage.setItem("cart", JSON.stringify(nextCart));
         }
 
         // item not yet in cart
@@ -52,7 +54,10 @@ export default function ProductPage() {
                 product: item,
                 quantity: parseInt(quantityRef.current.value, 10),
             }
-            setCart([...cart, entry]);
+            const nextCart = [...cart, entry];
+
+            setCart(nextCart);
+            localStorage.setItem("cart", JSON.stringify(nextCart));
         }
 
         setMessage("Added to cart");

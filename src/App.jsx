@@ -4,7 +4,7 @@ import { Outlet, useLocation } from "react-router-dom"
 import Footer from "./components/Footer/Footer";
 
 export default function App() {
-    const [cart, setCart] = useState([]);
+    const [cart, setCart] = useState(JSON.parse(localStorage.getItem("cart")) ?? []);
     const location = useLocation();
 
     useEffect(() => {
