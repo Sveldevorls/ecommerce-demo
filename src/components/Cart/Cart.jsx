@@ -41,17 +41,15 @@ export default function Cart() {
         .format(new Date((new Date).getTime() + 1000 * 60 * 60 * 24 * 14));
 
     function handleRemoveDialogClick(e) {
-        let nextCart;
 
         if (!e.target.id) {
             return;
         };
         if (e.target.id == "confirm") {
-            nextCart = cart.filter(entry => entry.product.id != removalProduct.id);
+            const nextCart = cart.filter(entry => entry.product.id != removalProduct.id);
+            setCart(nextCart);
+            localStorage.setItem("cart", JSON.stringify(nextCart));
         };
-
-        setCart(nextCart);
-        localStorage.setItem("cart", JSON.stringify(nextCart));
 
         dialogContainerRef.current.style.visibility = "hidden";
         removeConfirmRef.current.close();
