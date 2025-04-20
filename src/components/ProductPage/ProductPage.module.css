@@ -96,6 +96,16 @@
 
 /* Message */
 
+.actionMessageContainer {
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    
+    position: sticky;
+    bottom: 2em;
+}
+
 .actionMessage {
     opacity: 0;
 
@@ -103,10 +113,5 @@
     padding: 1em 2em;
     border-radius: 0.5em;
     
-    position: sticky;
-    bottom: 2em;
-    left: 50%;
-
-    transform: translateX(-50%);
     transition: opacity 0.5s ease;
 }

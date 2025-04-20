@@ -113,12 +113,14 @@ export default function ProductPage() {
                 </div>
             </div>
 
-            <p
-                className={styles.actionMessage}
-                ref={messageRef}
-            >
-                {message}
-            </p>
+            <div className={styles.actionMessageContainer}>
+                <p
+                    className={styles.actionMessage}
+                    ref={messageRef}
+                >
+                    {message}
+                </p>
+            </div>
         </div>
     );
 };
