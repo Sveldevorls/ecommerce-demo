@@ -1,6 +1,6 @@
 # E-commerce website demo
 
-Lipsum — A simple frontend-only e-commerce demo SAP website.  
+Lipsum — A simple frontend-only e-commerce demo website.
 Live demo at https://sveldevorls-ecommerce-demo.vercel.app/  
 
 Item data is fetched from https://fakestoreapi.com/.  
